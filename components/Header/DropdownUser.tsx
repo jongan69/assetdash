@@ -110,7 +110,7 @@ const DropdownUser = () => {
               My Profile
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link
               href="#"
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
@@ -130,10 +130,10 @@ const DropdownUser = () => {
               </svg>
               My Contacts
             </Link>
-          </li>
+          </li> */}
           <li>
             <Link
-              href="/pages/settings"
+              href="/settings"
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
             >
               <svg
@@ -157,6 +157,10 @@ const DropdownUser = () => {
             </Link>
           </li>
         </ul>
+        <Link
+              href="/auth/signin"
+              className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+            >
         <button className="flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
           <svg
             className="fill-current"
@@ -177,6 +181,7 @@ const DropdownUser = () => {
           </svg>
           Log Out
         </button>
+        </Link>
       </div>
       {/* <!-- Dropdown End --> */}
     </div>
