@@ -1,10 +1,8 @@
-// pages/api/account/balance.ts
 
-import { NextApiRequest, NextApiResponse } from 'next';
 import GCapiClient from '../../clients/gcapClient'; // Adjust the import path as per your project structure
 import { NextResponse } from 'next/server';
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
+export async function GET(request: Request) {
     try {
         // Initialize the GCapiClient with credentials from environment variables
         const client = new GCapiClient({
