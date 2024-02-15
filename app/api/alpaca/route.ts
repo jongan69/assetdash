@@ -1,5 +1,5 @@
 
-import { AlpacaClient } from '@master-chief/alpaca';
+import { AlpacaClient }  from '@master-chief/alpaca';
 import { NextResponse } from 'next/server';
 
 // API endpoint handler
