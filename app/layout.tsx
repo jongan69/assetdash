@@ -8,11 +8,16 @@ import Loader from "@/components/common/Loader";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 
+import { Auth } from '@supabase/auth-ui-react'
+import { SessionContextProvider, useSession, useSupabaseClient } from '@supabase/auth-helpers-react'
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = useSession()
+  const supabase = useSupabaseClient()
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -23,7 +28,9 @@ export default function RootLayout({
 
   return (
     <html lang="en">
+
       <body suppressHydrationWarning={true}>
+
         <div className="dark:bg-boxdark-2 dark:text-bodydark">
           {loading ? (
             <Loader />
