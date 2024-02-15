@@ -10,7 +10,7 @@ export async function GET(request: Request) {
       credentials: {
         key: process.env.ALPACA_API_KEY,
         secret: process.env.ALPACA_API_SECRET,
-        paper: true, // Set to true if using Alpaca's paper trading
+        // paper: true, // Set to true if using Alpaca's paper trading
       },
       rate_limit: true, // Enable rate limiting
     });

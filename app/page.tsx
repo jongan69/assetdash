@@ -3,7 +3,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Asset Dashboard",
-  description: "Manage all of your assets in one place",
+  description: "Manage all of your assets in one place and deploy your own trading bots",
   // other metadata
 };
 
