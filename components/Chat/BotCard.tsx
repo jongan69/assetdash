@@ -40,23 +40,34 @@ const chatData: Chat[] = [
 const ChatCard = () => {
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white py-6 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4">
-      <h4 className="mb-6 px-7.5 text-xl font-semibold text-black dark:text-white">
-        Bots
-      </h4>
-
+      <div className="flex flex-row">
+        <h4 className="mb-6 px-7.5 text-xl font-semibold text-black dark:text-white">
+          Bots
+        </h4>
+        <Link
+            href="/forms/form-layout"
+            className="flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4"
+            
+          >
+        <button className="rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-95">
+        <h4 className="text-xl font-semibold text-black dark:text-white">
+          Create New Bot
+        </h4>
+        </button>
+        </Link>
+      </div>
       <div>
         {chatData.map((chat, key) => (
           <Link
-            href="/"
+            href="/profile"
             className="flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4"
             key={key}
           >
             <div className="relative h-14 w-14 rounded-full">
               <Image src={chat.avatar} alt="User" width={57} height={56} />
               <span
-                className={`absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white ${
-                  chat.dot === 6 ? "bg-meta-6" : `bg-meta-${chat.dot}`
-                } `}
+                className={`absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white ${chat.dot === 6 ? "bg-meta-6" : `bg-meta-${chat.dot}`
+                  } `}
               ></span>
             </div>
 
