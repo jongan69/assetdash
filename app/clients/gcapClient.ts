@@ -88,6 +88,7 @@ export default class GCapiClient {
     }
 
     async getAccountInfo() {
+        let payload = []
         let credentials = {
             baseURL: this.baseURL,
             UserName: this.UserName,
@@ -99,6 +100,7 @@ export default class GCapiClient {
         // console.log("Data", credentials);
         if (!this.session) {
             await this.getSession(credentials);
+            payload.push({"forexAuth" : this.IsAuthenticated})
         }
         try {
             let url = 'userAccount/ClientAndTradingAccount';
@@ -110,19 +112,43 @@ export default class GCapiClient {
             const accountData = await fetch(`${this.baseURL}/${url}`, { headers })
                 .then((res) => res.json())
                 .then(async (data) => {
+                    payload.push({"tradingAccountInfo": data})
                     let url = 'margin/clientAccountMargin';
                     let headers = {
                         'Content-Type': 'application/json',
                         'UserName': this.UserName,
                         'Session': this.session, // Access session from constructor
                     };
-                    const firstClientId = data.clientAccounts[0].clientAccountId
-                    // console.log(firstClientId)
-                    const balanceresponse = await fetch(`${this.baseURL}/${url}?clientAccountId=${firstClientId}`, { headers })
+                    // const firstClientId = data.clientAccounts[0].clientAccountId
+                    // accounts.forEach(async (clientAccount: any) => {
+                    //     let id = clientAccount.clientAccountId
+                    //     const balanceresponse = await fetch(`${this.baseURL}/${url}?clientAccountId=${id}`, { headers })
+                    //         .then((balanceresponse) => balanceresponse.json())
+                    //     return balanceresponse
+                    // });
+                    const accounts = data.clientAccounts
+                    payload.push({"accounts": accounts})
+                    const firstClientId = accounts[0].clientAccountId
+                    console.log(accounts)
+                    await fetch(`${this.baseURL}/${url}?clientAccountId=${firstClientId}`, { headers })
                         .then((balanceresponse) => balanceresponse.json())
-                    return balanceresponse
+                        .then(async (balanceresponse) => {
+                            let url = 'tradehistory';
+                            let headers = {
+                                'Content-Type': 'application/json',
+                                'UserName': this.UserName,
+                                'Session': this.session, // Access session from constructor
+                            };
+                            payload.push({"balances": balanceresponse})
+                        const historyresponse = await fetch(`${this.baseURL}/${url}?clientAccountId=${firstClientId}`, { headers })
+                            .then((historyresponse) => historyresponse.json())
+                            payload.push({"historyResponse": historyresponse})
+                            return payload
+                        })
+                    
                 });
-                return accountData
+                console.log(payload)
+                return payload
         } catch (error: any) {
             throw new Error(error);
         }

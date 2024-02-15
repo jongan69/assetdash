@@ -14,10 +14,10 @@ export async function GET(request: Request) {
         });
 
         // Fetch the account balance
-        const balance = await client.getAccountInfo();
+        const forexData = await client.getAccountInfo();
         // console.log(balance)
         // Send the account balance as the response
-        return NextResponse.json({ balance })
+        return NextResponse.json({ forexData })
     } catch (error) {
         // If an error occurs, send an error response
         console.warn(error)

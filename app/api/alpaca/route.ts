@@ -17,9 +17,12 @@ export async function GET(request: Request) {
     // Fetch the account details including the account balance
     const account = await client.getAccount();
     const accountBalance = account.buying_power;
-
+    const accountHistory = await client.getPortfolioHistory({ period: '1M', timeframe: '1D' });
+    console.log(
+      { "history": accountHistory}
+    )
     // Return the account balance as the response
-    return NextResponse.json({ msg: accountBalance })
+    return NextResponse.json({ msg: accountBalance, accountHistory })
   } catch (error) {
     console.error('Error fetching account balance:', error);
     return NextResponse.json({ error })

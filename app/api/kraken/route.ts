@@ -18,8 +18,9 @@ export async function GET(req: any, res: any) {
         // Fetch the account balance from Kraken
         const balance = await kraken.balance()
         const tradeBalance = await kraken.tradeBalance()
+        const tradesHistory = await kraken.tradesHistory()
         // Return the balance as JSON
-        return NextResponse.json({ balanceData: { balance, tradeBalance } })
+        return NextResponse.json({ balanceData: { balance, tradeBalance, tradesHistory } })
     } catch (error) {
         // Handle any errors that occur during the API request
         console.error('Error fetching account balance:', error);

@@ -30,11 +30,11 @@ const ECommerce: React.FC = () => {
       const forex = await fetch('api/forex').then((res) => res.json())
       const crypto = await fetch('api/kraken').then((res) => res.json())
 
-      let totalValue =  (parseFloat(crypto.balanceData?.tradeBalance?.eb) +  parseFloat(alpaca?.msg) +  parseFloat(forex?.balance?.cash)).toFixed(2)
+      let cleanedForex = parseFloat(forex?.forexData[3]?.balances.cash).toFixed(2)      
       let cleanedCrypto = parseFloat(crypto.balanceData?.tradeBalance?.eb).toFixed(2)
+      let totalValue =  (parseFloat(cleanedCrypto) +  parseFloat(alpaca?.msg) +  parseFloat(cleanedForex)).toFixed(2)
       setTotal(totalValue)
-      setData({ alpaca, forex, cleanedCrypto });
-      // console.log(total)
+      setData({ alpaca, cleanedForex, cleanedCrypto });
 
     };
     fetchData();
@@ -44,7 +44,7 @@ const ECommerce: React.FC = () => {
     <>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-        <CardDataStats title="Total Value" total={`$` + total} rate="0.43%" levelUp>
+        <CardDataStats title="Total Value" total={`$` + total} rate="0.00%" levelUp>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -63,7 +63,7 @@ const ECommerce: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Stocks" total={`$` + data?.alpaca?.msg.toFixed(2)} rate="4.35%" levelUp>
+        <CardDataStats title="Total Stocks" total={`$` + data?.alpaca?.msg.toFixed(2)} rate="0.00%" levelUp>
           <svg
             className="fill-primary dark:fill-white"
             width="20"
@@ -86,7 +86,7 @@ const ECommerce: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Crypto" total={`$` + data?.cleanedCrypto} rate="2.59%" levelUp>
+        <CardDataStats title="Total Crypto" total={`$` + data?.cleanedCrypto} rate="0.00%" levelUp>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -105,7 +105,7 @@ const ECommerce: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Forex" total={`$` + data?.forex?.balance?.cash} rate="0.95%" levelDown>
+        <CardDataStats title="Total Forex" total={`$` + data?.cleanedForex} rate="0.00%" levelUp>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
