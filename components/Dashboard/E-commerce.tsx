@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ChartOne from "../Charts/ChartOne";
 import ChartThree from "../Charts/ChartThree";
 import ChartTwo from "../Charts/ChartTwo";
@@ -10,16 +10,41 @@ import CardDataStats from "../CardDataStats";
 
 // without this the component renders on server and throws an error
 import dynamic from "next/dynamic";
+import BotCard from "../Chat/BotCard";
 const MapOne = dynamic(() => import("../Maps/MapOne"), {
   ssr: false,
 });
 
+
+
 const ECommerce: React.FC = () => {
+
+  const [total, setTotal] = useState(null);
+  const [data, setData] = useState(null);
+
+  useEffect(() => {     // Fetch data on the client side     
+
+    const fetchData = async () => {
+
+      const alpaca = await fetch('/api/alpaca').then((res) => res.json())
+      const forex = await fetch('api/forex').then((res) => res.json())
+      const crypto = await fetch('api/kraken').then((res) => res.json())
+
+      let totalValue =  (parseFloat(crypto.balanceData?.tradeBalance?.eb) +  parseFloat(alpaca?.msg) +  parseFloat(forex?.balance?.cash)).toFixed(2)
+      let cleanedCrypto = parseFloat(crypto.balanceData?.tradeBalance?.eb).toFixed(2)
+      setTotal(totalValue)
+      setData({ alpaca, forex, cleanedCrypto });
+      // console.log(total)
+
+    };
+    fetchData();
+  }, []);
+
   return (
     <>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-        <CardDataStats title="Total views" total="$3.456K" rate="0.43%" levelUp>
+        <CardDataStats title="Total Value" total={`$` + total} rate="0.43%" levelUp>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -38,7 +63,7 @@ const ECommerce: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Profit" total="$45,2K" rate="4.35%" levelUp>
+        <CardDataStats title="Total Stocks" total={`$` + data?.alpaca?.msg.toFixed(2)} rate="4.35%" levelUp>
           <svg
             className="fill-primary dark:fill-white"
             width="20"
@@ -61,7 +86,7 @@ const ECommerce: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Product" total="2.450" rate="2.59%" levelUp>
+        <CardDataStats title="Total Crypto" total={`$` + data?.cleanedCrypto} rate="2.59%" levelUp>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -80,7 +105,7 @@ const ECommerce: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Users" total="3.456" rate="0.95%" levelDown>
+        <CardDataStats title="Total Forex" total={`$` + data?.forex?.balance?.cash} rate="0.95%" levelDown>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -108,12 +133,12 @@ const ECommerce: React.FC = () => {
       <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
         <ChartOne />
         <ChartTwo />
-        <ChartThree />
-        <MapOne />
+        {/* <ChartThree />
+        <MapOne /> */}
         <div className="col-span-12 xl:col-span-8">
           <TableOne />
         </div>
-        <ChatCard />
+        <BotCard />
       </div>
     </>
   );

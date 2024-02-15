@@ -1,22 +1,29 @@
-import { Kraken } from 'kraken-js-client';
+// pages/api/balance.js
+import { NextResponse } from "next/server";
+import { Kraken } from "node-kraken-api";
 
-// Configure authentication options
-const AuthOpts = {
-    apiKey: 'YOUR_API_KEY',
-    apiSecret: 'YOUR_API_SECRET'
-};
+export async function GET(req: any, res: any) {
+    // Initialize KrakenClient with your API keys
+    // IMPORTANT: Replace 'YourAPIKey' and 'YourAPISecret' with your actual Kraken API Key and Secret
+    const key =  process.env.KRAKEN_API_KEY;  // Use environment variables or another secure method to store these values
+    const secret = process.env.KRAKEN_API_PRIVATE_KEY; // Use environment variables or another secure method to store these values new KrakenClient(key, secret);
+    const kraken = new Kraken({
+        /** REST API key. */
+        key: key,
+        /** REST API secret. */
+        secret: secret
+       
+      });
 
-// Create a Kraken client instance
-const krakenClient = new Kraken({}, AuthOpts);
-
-// Handler function for the portfolio endpoint
-export default async function handler(req, res) {
     try {
-        // Retrieve portfolio balance
-        const balance = await krakenClient.Balance.get();
-        res.status(200).json(balance);
+        // Fetch the account balance from Kraken
+        const balance = await kraken.balance()
+        const tradeBalance = await kraken.tradeBalance()
+        // Return the balance as JSON
+        return NextResponse.json({ balanceData: {balance, tradeBalance} })
     } catch (error) {
-        console.error('Error fetching portfolio balance:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        // Handle any errors that occur during the API request
+        console.error('Error fetching account balance:', error);
+        res.status(500).json({ error: 'Failed to fetch account balance' });
     }
 }

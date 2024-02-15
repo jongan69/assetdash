@@ -1,17 +1,17 @@
 "use client";
 import { ApexOptions } from "apexcharts";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-const ApexCharts = dynamic(() => import("react-apexcharts"), { ssr: false });
+import Chart from 'react-apexcharts'
 
 const options: ApexOptions = {
   colors: ["#3C50E0", "#80CAEE"],
   chart: {
-    // events: {
-    //   beforeMount: (chart) => {
-    //     chart.windowResizeHandler();
-    //   },
-    // },
+    events: {
+      beforeMount: (chart) => {
+        chart.windowResizeHandler();
+      },
+    },
     fontFamily: "Satoshi, sans-serif",
     type: "bar",
     height: 335,
@@ -80,22 +80,31 @@ const ChartTwo: React.FC = () => {
   const [state, setState] = useState<ChartTwoState>({
     series: [
       {
-        name: "Sales",
+        name: "Open",
         data: [44, 55, 41, 67, 22, 43, 65],
       },
       {
-        name: "Revenue",
+        name: "Close",
         data: [13, 23, 20, 8, 13, 27, 15],
       },
     ],
   });
 
+
+  
   const handleReset = () => {
     setState((prevState) => ({
       ...prevState,
     }));
   };
-  handleReset;
+  handleReset
+  // useEffect(() =>{
+  //   handleReset
+  // },[])
+
+  const isWindowAvailable = () => typeof window !== "undefined";
+
+  if (!isWindowAvailable()) return <></>;
 
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white p-7.5 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4">
@@ -141,7 +150,7 @@ const ChartTwo: React.FC = () => {
 
       <div>
         <div id="chartTwo" className="-ml-5 -mb-9">
-          <ApexCharts
+          <Chart
             options={options}
             series={state.series}
             type="bar"

@@ -1,23 +1,28 @@
-// app/api/forex
+// pages/api/account/balance.ts
 
-import { GCapiClient } from '../../clients/gcapClient'; // Adjust the import path as per your project structure
+import { NextApiRequest, NextApiResponse } from 'next';
+import GCapiClient from '../../clients/gcapClient'; // Adjust the import path as per your project structure
+import { NextResponse } from 'next/server';
 
-export default async function handler(req, res) {
-  const { NEXT_PUBLIC_BASE_URL, GAPCAP_USERNAME, GAPCAP_PASSWORD, GAPCAP_API_KEY } = process.env;
+export async function GET(req: NextApiRequest, res: NextApiResponse) {
+    try {
+        // Initialize the GCapiClient with credentials from environment variables
+        const client = new GCapiClient({
+            baseURL: process.env.GCAP_API_BASE_URL,
+            UserName: process.env.GCAP_USERNAME,
+            Password: process.env.GCAP_PASSWORD,
+            AppKey: process.env.GCAP_APPKEY,
+            TradingAccountId: process.env.GCAP_TRADEACCOUNTID
+        });
 
-  try {
-    const client = new GCapiClient(NEXT_PUBLIC_BASE_URL);
-
-    // Login to obtain session
-    await client.login(GAPCAP_USERNAME, GAPCAP_PASSWORD, GAPCAP_API_KEY);
-
-    // Get the account balance
-    const balance = await client.getAccountBalance();
-
-    // Send the account balance as the response
-    res.status(200).json({ balance });
-  } catch (error) {
-    // If an error occurs, send an error response
-    res.status(500).json({ error: error.message });
-  }
+        // Fetch the account balance
+        const balance = await client.getAccountInfo();
+        // console.log(balance)
+        // Send the account balance as the response
+        return NextResponse.json({ balance })
+    } catch (error) {
+        // If an error occurs, send an error response
+        console.warn(error)
+        return NextResponse.json({ error })
+    }
 }

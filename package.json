@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@master-chief/alpaca": "^6.3.20",
     "@react-jvectormap/core": "^1.0.4",
     "@react-jvectormap/unitedstates": "^1.0.1",
     "@types/node": "20.4.8",
@@ -16,10 +17,15 @@
     "@types/react-dom": "18.2.7",
     "apexcharts": "^3.41.1",
     "autoprefixer": "10.4.14",
+    "axios": "^1.6.7",
+    "encoding": "^0.1.13",
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.12",
     "jsvectormap": "^1.5.3",
+    "kraken-api": "^1.0.1",
+    "kraken-js-client": "^1.1.10",
     "next": "13.5.6",
+    "node-kraken-api": "^2.2.2",
     "postcss": "8.4.31",
     "react": "18.2.0",
     "react-apexcharts": "^1.4.1",
