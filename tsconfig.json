@@ -1,7 +1,5 @@
 {
   "compilerOptions": {
-    "typeRoots": ["./node_modules/@types", "./node_modules/@master-chief/alpaca/@types"],
-    "types": ["node", "@master-chief/alpaca"],
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
