@@ -23,6 +23,6 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
     return NextResponse.json({ msg: accountBalance })
   } catch (error) {
     console.error('Error fetching account balance:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    return NextResponse.json({ error })
   }
 }
