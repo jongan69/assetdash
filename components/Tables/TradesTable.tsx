@@ -112,7 +112,7 @@ const TradesTable = ({ combinedHistory, porfolioValue }) => {
             </div>
             <div className="flex items-center justify-center p-2.5 xl:p-5">
               <p className={`${(calculateReturnPercentage(trade) > 0) ? "text-meta-3" : "text-meta-1"}`}>
-                {calculateReturnPercentage(trade) ?? `--`}%
+                {calculateReturnPercentage(trade).toString().substring(0, 5) ?? `--`}%
               </p>
             </div>
 
