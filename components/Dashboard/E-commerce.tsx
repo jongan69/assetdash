@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import ChartOne from "../Charts/ChartOne";
 import ChartThree from "../Charts/ChartThree";
 import ChartTwo from "../Charts/ChartTwo";
@@ -11,6 +11,10 @@ import CardDataStats from "../CardDataStats";
 // without this the component renders on server and throws an error
 import dynamic from "next/dynamic";
 import BotCard from "../Chat/BotCard";
+import TradesTable from "../Tables/TradesTable";
+import AssetChart from "../Charts/AssetChart";
+import ProfitChart from "../Charts/ProfitChart";
+import Loader from "../common/Loader";
 const MapOne = dynamic(() => import("../Maps/MapOne"), {
   ssr: false,
 });
@@ -20,6 +24,7 @@ const MapOne = dynamic(() => import("../Maps/MapOne"), {
 const ECommerce: React.FC = () => {
 
   const [total, setTotal] = useState(null);
+  const [history, setHistory] = useState(null);
   const [data, setData] = useState(null);
 
   useEffect(() => {     // Fetch data on the client side     
@@ -30,21 +35,57 @@ const ECommerce: React.FC = () => {
       const forex = await fetch('api/forex').then((res) => res.json())
       const crypto = await fetch('api/kraken').then((res) => res.json())
 
-      let cleanedForex = parseFloat(forex?.forexData[3]?.balances.cash).toFixed(2)      
+      const krakenHistory = crypto.balanceData.tradesHistory.trades
+      const forexHistory = forex.forexData[4].historyResponse
+      const alpacaHistory = alpaca.tradesWithAssets
+
+      // Initialize an empty array for combined history
+      const combinedHistory = [];
+
+      // Loop through Kraken history and add each trade with asset information to combined history
+      Object.keys(krakenHistory).forEach(key => {
+        const tradeData = krakenHistory[key];
+        const assetData = {
+          pair: tradeData.pair,
+          // Add other relevant information from Kraken trade data as needed
+          isCrypto: true, // Set isCrypto to true for Kraken trades
+        };
+        combinedHistory.push({ trade: tradeData, asset: assetData });
+      });
+
+      // Loop through Alpaca history and add each trade with asset information to combined history
+      alpacaHistory.forEach(entry => {
+        combinedHistory.push({ trade: entry.trade, asset: { ...entry.asset, isCrypto: false } });
+      });
+      // console.log(combinedHistory);
+
+      // function trimArray(arr) {
+      //   if (arr.length <= 6) {
+      //     return arr; // If array length is less than or equal to 6, return the original array
+      //   } else {
+      //     return arr.slice(0, 3).concat(arr.slice(-3)); // Return the first 3 items concatenated with the last 3 items
+      //   }
+      // }
+
+      // // // Example usage:
+      // const trimmedArray = trimArray(combinedHistory);
+      // console.log(trimmedArray);
+
+
+      setHistory(combinedHistory)
+      let cleanedForex = parseFloat(forex?.forexData[3]?.balances.cash).toFixed(2)
       let cleanedCrypto = parseFloat(crypto.balanceData?.tradeBalance?.eb).toFixed(2)
-      let totalValue =  (parseFloat(cleanedCrypto) +  parseFloat(alpaca?.msg) +  parseFloat(cleanedForex)).toFixed(2)
+      let totalValue = (parseFloat(cleanedCrypto) + parseFloat(alpaca?.msg) + parseFloat(cleanedForex)).toFixed(2)
       setTotal(totalValue)
       setData({ alpaca, cleanedForex, cleanedCrypto });
-
     };
     fetchData();
   }, []);
 
   return (
-    <>
-
+    <Suspense fallback={<Loader />}>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-        <CardDataStats title="Total Value" total={`$` + total} rate="0.00%" levelUp>
+        <CardDataStats title="Total Value" total={`$` + `${total ?? 0}`} rate="0.00%" levelUp>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -63,7 +104,7 @@ const ECommerce: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Stocks" total={`$` + data?.alpaca?.msg.toFixed(2)} rate="0.00%" levelUp>
+        <CardDataStats title="Total Stocks" total={`$` + `${data?.alpaca?.msg.toFixed(2) ?? 0}`} rate="0.00%" levelUp>
           <svg
             className="fill-primary dark:fill-white"
             width="20"
@@ -86,7 +127,7 @@ const ECommerce: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Crypto" total={`$` + data?.cleanedCrypto} rate="0.00%" levelUp>
+        <CardDataStats title="Total Crypto" total={`$` + `${data?.cleanedCrypto ?? 0}`} rate="0.00%" levelUp>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -105,7 +146,7 @@ const ECommerce: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Forex" total={`$` + data?.cleanedForex} rate="0.00%" levelUp>
+        <CardDataStats title="Total Forex" total={`$` + `${data?.cleanedForex ?? 0}`} rate="0.00%" levelUp>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -131,16 +172,18 @@ const ECommerce: React.FC = () => {
       </div>
 
       <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
-        <ChartOne />
-        <ChartTwo />
+        {/* <ChartOne /> */}
+        <AssetChart combinedHistory={history} />
+        <ProfitChart tradeData={history} />
+        {/* <ChartTwo /> */}
         {/* <ChartThree />
         <MapOne /> */}
         <div className="col-span-12 xl:col-span-8">
-          <TableOne />
+          <TradesTable combinedHistory={history} porfolioValue={total} />
         </div>
-        <BotCard />
+        {/* <BotCard /> */}
       </div>
-    </>
+    </Suspense>
   );
 };
 

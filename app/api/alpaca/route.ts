@@ -17,12 +17,25 @@ export async function GET(request: Request) {
     // Fetch the account details including the account balance
     const account = await client.getAccount();
     const accountBalance = account.buying_power;
-    const accountHistory = await client.getPortfolioHistory({ period: '1M', timeframe: '1D' });
-    console.log(
-      { "history": accountHistory}
-    )
+    const accountHistory = await client.getPortfolioHistory({ 
+      period: '1M', 
+      timeframe: '1D',
+    });
+    const trades = await client.getOrders({ status: 'all', limit: 50 }); // Adjust limit as needed
+    const tradesWithAssets = [];
+
+    for (const trade of trades) {
+      // For each trade, fetch the asset details
+      const asset = await client.getAsset({ asset_id_or_symbol: trade.symbol });
+      tradesWithAssets.push({ trade: trade, asset: asset });
+    }
+    // const accountAssets = await client.getAssets();
+    // const snapshot = await client.getSnapshot();
+    // console.log(
+    //   { "tradesWithAssets": tradesWithAssets}
+    // )
     // Return the account balance as the response
-    return NextResponse.json({ msg: accountBalance, accountHistory })
+    return NextResponse.json({ msg: accountBalance, accountHistory, tradesWithAssets })
   } catch (error) {
     console.error('Error fetching account balance:', error);
     return NextResponse.json({ error })

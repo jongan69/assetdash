@@ -109,7 +109,7 @@ export default class GCapiClient {
                 'UserName': this.UserName,
                 'Session': this.session, // Access session from constructor
             };
-            const accountData = await fetch(`${this.baseURL}/${url}`, { headers })
+            await fetch(`${this.baseURL}/${url}`, { headers })
                 .then((res) => res.json())
                 .then(async (data) => {
                     payload.push({"tradingAccountInfo": data})
@@ -129,7 +129,7 @@ export default class GCapiClient {
                     const accounts = data.clientAccounts
                     payload.push({"accounts": accounts})
                     const firstClientId = accounts[0].clientAccountId
-                    console.log(accounts)
+                    // console.log(accounts)
                     await fetch(`${this.baseURL}/${url}?clientAccountId=${firstClientId}`, { headers })
                         .then((balanceresponse) => balanceresponse.json())
                         .then(async (balanceresponse) => {
@@ -147,7 +147,7 @@ export default class GCapiClient {
                         })
                     
                 });
-                console.log(payload)
+                // console.log(payload)
                 return payload
         } catch (error: any) {
             throw new Error(error);

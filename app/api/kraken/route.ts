@@ -19,8 +19,10 @@ export async function GET(req: any, res: any) {
         const balance = await kraken.balance()
         const tradeBalance = await kraken.tradeBalance()
         const tradesHistory = await kraken.tradesHistory()
+        const ledgersHistory = await kraken.ledgers()
+        // console.log(ledgersHistory)
         // Return the balance as JSON
-        return NextResponse.json({ balanceData: { balance, tradeBalance, tradesHistory } })
+        return NextResponse.json({ balanceData: { balance, tradeBalance, tradesHistory, ledgersHistory } })
     } catch (error) {
         // Handle any errors that occur during the API request
         console.error('Error fetching account balance:', error);
