@@ -17,16 +17,16 @@ const TradesTable = ({ combinedHistory, porfolioValue }) => {
       const side = trade.trade.type // side of trade
       const amount = parseFloat(trade.trade.cost) // amount of trade
       // if trade is sell, portfolio + trade amount / porfolio
-      if (side === 'sell') return (((port + amount) / port) - 1).toFixed(5)
+      if (side === 'sell') return (((port + amount) / port) - 1)
       // if trade is buy,  100 - (portfolio - trade amount / porfolio)
-      if (side === 'buy') return -((1 - (port - amount) / port) * 100).toFixed(5)
+      if (side === 'buy') return ((1 - (port - amount) / port) * 100)
     } else {
       const side = trade.trade.side
       const amount = parseFloat(trade.trade.filled_avg_price)
       // if trade is sell, portfolio + trade amount / porfolio
-      if (side === 'sell') return (((port + amount) / port) - 1).toFixed(5)
+      if (side === 'sell') return (((port + amount) / port) - 1)
       // if trade is buy,  100 - (portfolio - trade amount / porfolio)
-      if (side === 'buy') return -((1 - (port - amount) / port) * 100).toFixed(5)
+      if (side === 'buy') return ((1 - (port - amount) / port) * 100)
     }
 
   }
