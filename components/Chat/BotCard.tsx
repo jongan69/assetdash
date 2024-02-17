@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import SwitcherFour from "../Switchers/SwitcherFour";
+import ky from 'ky';
 
 const botData = [
   {
@@ -16,47 +17,42 @@ const botData = [
   },
 ];
 
-
-
 const BotCard = () => {
-  const [status, setStatus] = useState(null)
   const [enabled, setEnabled] = useState<boolean>(false);
 
   const getStatus = async () => {
-    for (let i = 0; i in botData; i++) {
-      let status = await fetch(botData[i].statusURL).then(data => data.json())
-      setEnabled(status)
+    try {
+      const apiStatus = await ky.get(botData[0].statusURL).json()
+      console.log(apiStatus)
+      if (typeof (apiStatus) === 'boolean') return setEnabled(apiStatus)
+    } catch (Exception) {
+      throw Exception;
     }
   }
 
-  useEffect(() => {
-    setStatus(getStatus)
-  }, [])
-
   const turnOn = async () => {
-    let botStats = null
-    for (let i = 0; i in botData; i++) {
-      let status = await fetch(botData[i].turnOn, { "method": "POST" }).then(data => data.json())
-      botStats = status
+    try {
+      const json = await ky.post(botData[0].turnOn).json()
+      setEnabled(true)
+      return json
+    } catch (Exception) {
+      throw Exception;
     }
-    console.log(botStats)
-    return botStats
   }
 
   const turnOff = async () => {
-    let botStats = null
-    for (let i = 0; i in botData; i++) {
-      let status = await fetch(botData[i].turnOff, { "method": "POST" }).then(data => data.json())
-      botStats = status
+    try {
+      const json = await ky.post(botData[0].turnOff).json()
+      setEnabled(false)
+      return json
+    } catch (Exception) {
+      throw Exception;
     }
-    console.log(botStats)
-    return botStats
   }
 
   useEffect(() => {
-    if (enabled) turnOn
-    else turnOff
-  }, [enabled])
+    getStatus()
+  }, [])
 
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white py-6 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4">
@@ -64,6 +60,7 @@ const BotCard = () => {
         <h4 className="mb-6 px-7.5 text-xl font-semibold text-black dark:text-white">
           Bots
         </h4>
+
         {/* <Link
           href="/forms/form-layout"
           className="flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4"
@@ -75,18 +72,17 @@ const BotCard = () => {
             </h4>
           </button>
         </Link> */}
+
       </div>
       <div>
         {botData.map((bot, key) => (
           <div
-
             className="flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4"
             key={key}
           >
             <div className="relative h-14 w-14 rounded-full">
               <Link
                 href="/profile"
-
                 key={key}
               >
                 <Image src={bot.avatar} alt="User" width={57} height={56} />
@@ -96,7 +92,6 @@ const BotCard = () => {
                 ${enabled ? "bg-meta-3" : `bg-meta-6`}`}
               ></span>
             </div>
-
             <div className="flex flex-1 items-center justify-between">
               <div>
                 <h5 className="font-medium text-black dark:text-white">
@@ -109,14 +104,12 @@ const BotCard = () => {
                   <span className="text-xs"> . {bot.time} min</span>
                 </p>
               </div>
-              <SwitcherFour enabled={enabled} setEnabled={setEnabled} />
-              {/* {status !== 0 && (
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary">
-                  <span className="text-sm font-medium text-white">
-                    is Running: {status}
-                  </span>
-                </div>
-              )} */}
+              <SwitcherFour
+                enabled={enabled}
+                setEnabled={setEnabled}
+                turnOn={turnOn}
+                turnOff={turnOff}
+              />
             </div>
           </div>
         ))}

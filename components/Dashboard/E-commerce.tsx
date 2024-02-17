@@ -1,10 +1,5 @@
 "use client";
 import React, { Suspense, useEffect, useState } from "react";
-import ChartOne from "../Charts/ChartOne";
-import ChartThree from "../Charts/ChartThree";
-import ChartTwo from "../Charts/ChartTwo";
-import ChatCard from "../Chat/ChatCard";
-import TableOne from "../Tables/TableOne";
 import CardDataStats from "../CardDataStats";
 // import Map from "../Maps/TestMap";
 
@@ -15,11 +10,6 @@ import TradesTable from "../Tables/TradesTable";
 import AssetChart from "../Charts/AssetChart";
 import ProfitChart from "../Charts/ProfitChart";
 import Loader from "../common/Loader";
-const MapOne = dynamic(() => import("../Maps/MapOne"), {
-  ssr: false,
-});
-
-
 
 const ECommerce: React.FC = () => {
 
@@ -36,7 +26,6 @@ const ECommerce: React.FC = () => {
       const crypto = await fetch('api/kraken').then((res) => res.json())
 
       const krakenHistory = crypto.balanceData.tradesHistory.trades
-      const forexHistory = forex.forexData[4].historyResponse
       const alpacaHistory = alpaca.tradesWithAssets
 
       // Initialize an empty array for combined history

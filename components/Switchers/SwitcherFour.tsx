@@ -1,14 +1,32 @@
 "use client";
 import { useState } from "react";
+interface SwitcherFourProps {
+  enabled: boolean;
+  setEnabled: (enabled: boolean) => void;
+  turnOn: () => void;
+  turnOff: () => void;
+}
 
-const SwitcherFour = ({ enabled, setEnabled}: any) => {
-  // const [enabled, setEnabled] = useState<boolean>(false);
+const SwitcherFour: React.FC<SwitcherFourProps> = ({
+  enabled,
+  setEnabled,
+  turnOn,
+  turnOff,
+}) => {
+  const handleClick = () => {
+    if (enabled) {
+      turnOff();
+    } else {
+      turnOn();
+    }
+  };
 
   return (
     <div>
       <label
         htmlFor="toggle4"
         className="flex cursor-pointer select-none items-center"
+        onClick={handleClick}
       >
         <div className="relative">
           <input

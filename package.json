@@ -28,6 +28,7 @@
     "jsvectormap": "^1.5.3",
     "kraken-api": "^1.0.1",
     "kraken-js-client": "^1.1.10",
+    "ky": "^1.2.0",
     "next": "13.5.6",
     "node-kraken-api": "^2.2.2",
     "postcss": "8.4.31",

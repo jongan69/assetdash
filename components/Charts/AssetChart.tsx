@@ -123,7 +123,7 @@ const ChartOne: React.FC<ChartOneProps> = ({ combinedHistory }) => {
       ],
     });
 
-    console.log(state)
+    // console.log(state)
   }, [combinedHistory]);
 
   return (

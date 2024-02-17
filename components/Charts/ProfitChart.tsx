@@ -11,27 +11,27 @@ const options: ApexOptions = {
         height: 335,
         toolbar: {
             show: false,
-          },
-          zoom: {
+        },
+        zoom: {
             enabled: true,
-            type: 'x',  
-            autoScaleYaxis: false,  
+            type: 'x',
+            autoScaleYaxis: false,
             zoomedArea: {
-              fill: {
-                color: '#90CAF9',
-                opacity: 0.4
-              },
-              stroke: {
-                color: '#0D47A1',
-                opacity: 0.4,
-                width: 1
-              }
+                fill: {
+                    color: '#90CAF9',
+                    opacity: 0.4
+                },
+                stroke: {
+                    color: '#0D47A1',
+                    opacity: 0.4,
+                    width: 1
+                }
             }
         }
     },
     dataLabels: {
         enabled: false,
-      },
+    },
     plotOptions: {
         bar: {
             horizontal: false,
@@ -47,12 +47,12 @@ const options: ApexOptions = {
         fontFamily: "Satoshi",
         fontWeight: 500,
         fontSize: "14px",
-        
+
     },
     fill: {
         opacity: 1,
     },
-    
+
 };
 
 interface Trade {
@@ -84,7 +84,7 @@ const ChartTwo: React.FC<ChartTwoProps> = ({ tradeData }) => {
                     cryptoProfitData.push(-tradeCost)
                 }
                 if (tradeSide === 'sell') {
-                    cryptoProfitData.push(tradeCost )
+                    cryptoProfitData.push(tradeCost)
                 }
             } else {
                 const tradeTime = trade.trade.filled_at
@@ -102,7 +102,7 @@ const ChartTwo: React.FC<ChartTwoProps> = ({ tradeData }) => {
             return { cryptoProfitData, stockProfitData }
         })
 
-        console.log(cryptoProfitData)
+        // console.log(cryptoProfitData)
 
         if (stockProfitData !== undefined) {
             setState({
@@ -113,8 +113,6 @@ const ChartTwo: React.FC<ChartTwoProps> = ({ tradeData }) => {
             });
         }
     }, [tradeData])
-
-
 
 
     return (
