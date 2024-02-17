@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import SwitcherFour from "../Switchers/SwitcherFour";
 
 const botData = [
   {
@@ -10,25 +11,53 @@ const botData = [
     text: "Trading on Alpaca API",
     time: 0,
     statusURL: 'http://192.168.1.141:5000/get_status',
-    dot: 6,
+    turnOn: 'http://192.168.1.141:5000/start_bot',
+    turnOff: 'http://192.168.1.141:5000/stop_bot',
   },
 ];
 
-const getStatus = async () => {
-  let botStats = null
-  for (let i = 0; i in botData; i++) {
-    let status = await fetch(botData[i].statusURL).then(data => data.json())
-    botStats = status
-  }
-  console.log(botStats)
-  return botStats
-}
+
 
 const BotCard = () => {
   const [status, setStatus] = useState(null)
+  const [enabled, setEnabled] = useState<boolean>(false);
+
+  const getStatus = async () => {
+    for (let i = 0; i in botData; i++) {
+      let status = await fetch(botData[i].statusURL).then(data => data.json())
+      setEnabled(status)
+    }
+  }
+
   useEffect(() => {
     setStatus(getStatus)
-  }, [botData])
+  }, [])
+
+  const turnOn = async () => {
+    let botStats = null
+    for (let i = 0; i in botData; i++) {
+      let status = await fetch(botData[i].turnOn,
+        { "method": "POST" }).then(data => data.json())
+      botStats = status
+    }
+    console.log(botStats)
+    return botStats
+  }
+
+  const turnOff = async () => {
+    let botStats = null
+    for (let i = 0; i in botData; i++) {
+      let status = await fetch(botData[i].turnOff, { "method": "POST" }).then(data => data.json())
+      botStats = status
+    }
+    console.log(botStats)
+    return botStats
+  }
+
+  useEffect(() => {
+    if (enabled) turnOn
+    else turnOff
+  }, [enabled])
 
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white py-6 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4">
@@ -36,7 +65,7 @@ const BotCard = () => {
         <h4 className="mb-6 px-7.5 text-xl font-semibold text-black dark:text-white">
           Bots
         </h4>
-        <Link
+        {/* <Link
           href="/forms/form-layout"
           className="flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4"
 
@@ -46,20 +75,26 @@ const BotCard = () => {
               Create New Bot
             </h4>
           </button>
-        </Link>
+        </Link> */}
       </div>
       <div>
         {botData.map((bot, key) => (
-          <Link
-            href="/profile"
+          <div
+
             className="flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4"
             key={key}
           >
             <div className="relative h-14 w-14 rounded-full">
-              <Image src={bot.avatar} alt="User" width={57} height={56} />
+              <Link
+                href="/profile"
+
+                key={key}
+              >
+                <Image src={bot.avatar} alt="User" width={57} height={56} />
+              </Link>
               <span
                 className={`absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white 
-                ${status ? "bg-meta-3" : `bg-meta-${bot.dot}`}`}
+                ${enabled ? "bg-meta-3" : `bg-meta-6`}`}
               ></span>
             </div>
 
@@ -70,11 +105,12 @@ const BotCard = () => {
                 </h5>
                 <p>
                   <span className="text-sm text-black dark:text-white">
-                    {bot.text}
+                    {bot.text}: {JSON.stringify(enabled)}
                   </span>
                   <span className="text-xs"> . {bot.time} min</span>
                 </p>
               </div>
+              <SwitcherFour enabled={enabled} setEnabled={setEnabled} />
               {/* {status !== 0 && (
                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary">
                   <span className="text-sm font-medium text-white">
@@ -83,7 +119,7 @@ const BotCard = () => {
                 </div>
               )} */}
             </div>
-          </Link>
+          </div>
         ))}
       </div>
     </div>

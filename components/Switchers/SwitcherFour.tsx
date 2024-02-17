@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
 
-const SwitcherFour = () => {
-  const [enabled, setEnabled] = useState<boolean>(false);
+const SwitcherFour = ({ enabled, setEnabled}) => {
+  // const [enabled, setEnabled] = useState<boolean>(false);
 
   return (
     <div>
