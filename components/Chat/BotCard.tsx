@@ -24,7 +24,7 @@ const getStatus = async () => {
   return botStats
 }
 
-const BotCard = async () => {
+const BotCard = () => {
   const [status, setStatus] = useState(null)
   useEffect(() => {
     setStatus(getStatus)
