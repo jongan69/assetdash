@@ -24,7 +24,6 @@ function useLocalStorage<T>(
       return initialValue;
     }
   });
-
   // useEffect to update local storage when the state changes
   useEffect(() => {
     try {

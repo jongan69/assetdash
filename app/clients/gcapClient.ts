@@ -6,6 +6,8 @@ interface Credentials {
     TradingAccountId?: string;
     session?: string;
 }
+// Note: Not all Gain Capital APIs are using the new base url v2 ie news
+const oldBaseURL = 'https://ciapi.cityindex.com/TradingAPI'
 
 function makeAuthData(action: string, credentials: Credentials, session: any) {
     if (action === 'session') {
@@ -49,7 +51,6 @@ export default class GCapiClient {
 
     async getSession(credentials: Credentials) {
         const { url, body } = makeAuthData('session', credentials, null)
-        // console.log(`${this.baseURL}/${url}`, JSON.stringify(body))
         try {
             await fetch(`${this.baseURL}/${url}`,
                 {
@@ -61,11 +62,8 @@ export default class GCapiClient {
                 })
                 .then((response) => response.json())
                 .then(async (data) => {
-                    // console.log(data)
                     this.session = data?.session; // Initialize session to null
-                    // console.log("Session", this.session);
                     const { url, body } = makeAuthData('validate', credentials, this.session)
-                    // console.log(url, body)
                     await fetch(`${this.baseURL}/${url}`,
                         {
                             headers: {
@@ -81,10 +79,9 @@ export default class GCapiClient {
                             return this.IsAuthenticated;
                         });
                 })
-        } catch (error: any) {
-            throw new Error(error);
+        } catch (Exception) {
+            throw Exception;
         }
-
     }
 
     async getAccountInfo() {
@@ -97,10 +94,9 @@ export default class GCapiClient {
             TradingAccountId: this.TradingAccountId,
             session: this.session
         }
-        // console.log("Data", credentials);
         if (!this.session) {
             await this.getSession(credentials);
-            payload.push({"forexAuth" : this.IsAuthenticated})
+            payload.push({ "forexAuth": this.IsAuthenticated })
         }
         try {
             let url = 'userAccount/ClientAndTradingAccount';
@@ -112,22 +108,15 @@ export default class GCapiClient {
             await fetch(`${this.baseURL}/${url}`, { headers })
                 .then((res) => res.json())
                 .then(async (data) => {
-                    payload.push({"tradingAccountInfo": data})
+                    payload.push({ "tradingAccountInfo": data })
                     let url = 'margin/clientAccountMargin';
                     let headers = {
                         'Content-Type': 'application/json',
                         'UserName': this.UserName,
                         'Session': this.session, // Access session from constructor
                     };
-                    // const firstClientId = data.clientAccounts[0].clientAccountId
-                    // accounts.forEach(async (clientAccount: any) => {
-                    //     let id = clientAccount.clientAccountId
-                    //     const balanceresponse = await fetch(`${this.baseURL}/${url}?clientAccountId=${id}`, { headers })
-                    //         .then((balanceresponse) => balanceresponse.json())
-                    //     return balanceresponse
-                    // });
                     const accounts = data.clientAccounts
-                    payload.push({"accounts": accounts})
+                    payload.push({ "accounts": accounts })
                     const firstClientId = accounts[0].clientAccountId
                     // console.log(accounts)
                     await fetch(`${this.baseURL}/${url}?clientAccountId=${firstClientId}`, { headers })
@@ -139,19 +128,84 @@ export default class GCapiClient {
                                 'UserName': this.UserName,
                                 'Session': this.session, // Access session from constructor
                             };
-                            payload.push({"balances": balanceresponse})
-                        const historyresponse = await fetch(`${this.baseURL}/${url}?clientAccountId=${firstClientId}`, { headers })
-                            .then((historyresponse) => historyresponse.json())
-                            payload.push({"historyResponse": historyresponse})
+                            payload.push({ "balances": balanceresponse })
+                            const historyresponse = await fetch(`${this.baseURL}/${url}?clientAccountId=${firstClientId}`, { headers })
+                                .then((historyresponse) => historyresponse.json())
+                            payload.push({ "historyResponse": historyresponse })
                             return payload
                         })
-                    
                 });
-                // console.log(payload)
-                return payload
-        } catch (error: any) {
-            throw new Error(error);
+            return payload
+        } catch (Exception) {
+            throw Exception;
         }
     }
+
+    async getUSNewsHeadlines() {
+        let payload = []
+        let credentials = {
+            baseURL: this.baseURL,
+            UserName: this.UserName,
+            Password: this.Password,
+            AppKey: this.AppKey,
+            TradingAccountId: this.TradingAccountId,
+            session: this.session
+        }
+        if (!this.session) {
+            await this.getSession(credentials);
+            payload.push({ "forexAuth": this.IsAuthenticated })
+        }
+        try {
+            let headers = {
+                'Content-Type': 'application/json',
+                'UserName': this.UserName,
+                'Session': this.session, // Access session from constructor
+            };
+            await fetch(`${oldBaseURL}/news/newsheadlines?region=FX&cultureId=9&maxResults=500`, {
+                headers
+            }).then((data) => data.json())
+                .then((USHeadlines) => {
+                    payload.push({ "USHeadlines": USHeadlines })
+                })
+            return payload
+        } catch (Exception) {
+            throw Exception;
+        }
+    }
+
+
+    async getUSNews() {
+        let payload = []
+        let credentials = {
+            baseURL: this.baseURL,
+            UserName: this.UserName,
+            Password: this.Password,
+            AppKey: this.AppKey,
+            TradingAccountId: this.TradingAccountId,
+            session: this.session
+        }
+        if (!this.session) {
+            await this.getSession(credentials);
+            payload.push({ "forexAuth": this.IsAuthenticated })
+        }
+        try {
+            let headers = {
+                'Content-Type': 'application/json',
+                'UserName': this.UserName,
+                'Session': this.session, // Access session from constructor
+            };
+            await fetch(`${oldBaseURL}/news/news?region=FX&cultureId=69&maxResults=500`, {
+                headers
+            }).then((data) => data.json())
+                .then((USHeadlines) => {
+                    payload.push({ "USHeadlines": USHeadlines })
+                })
+            return payload
+        } catch (Exception) {
+            throw Exception;
+        }
+    }
+
+
 }
 
