@@ -73,8 +73,8 @@ const ECommerce: React.FC = () => {
 
 
       setHistory(combinedHistory)
-      let cleanedForex = 0
-      // let cleanedForex = parseFloat(forex?.forexData[3]?.balances.cash).toFixed(2)
+      // let cleanedForex = 0
+      let cleanedForex = parseFloat(forex?.forexData[3]?.balances.cash).toFixed(2)
       let cleanedCrypto = parseFloat(crypto.balanceData?.tradeBalance?.eb).toFixed(2)
       let totalValue = (parseFloat(cleanedCrypto) + parseFloat(alpaca?.msg) + parseFloat(cleanedForex)).toFixed(2)
       setTotal(totalValue)
