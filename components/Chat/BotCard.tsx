@@ -36,8 +36,7 @@ const BotCard = () => {
   const turnOn = async () => {
     let botStats = null
     for (let i = 0; i in botData; i++) {
-      let status = await fetch(botData[i].turnOn,
-        { "method": "POST" }).then(data => data.json())
+      let status = await fetch(botData[i].turnOn, { "method": "POST" }).then(data => data.json())
       botStats = status
     }
     console.log(botStats)
