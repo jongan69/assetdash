@@ -1,15 +1,12 @@
 # Asset Dash 
 
-This admin dashboard has added
+This admin dashboard has added apis for
+
  - Alpaca API
  - Gain Capital API (custom client)
  - Kraken Exchange API
 
 To display current live balances
-
-Admin dashboard template built on **Next.js and Tailwind CSS** providing developers with everything they need to create a feature-rich and data-driven: back-end, dashboard, or admin panel solution for any sort of web project.
-
-[![tailwind nextjs admin template](https://github.com/TailAdmin/free-nextjs-admin-dashboard/blob/main/tailadmin-nextjs.jpg)](https://nextjs-demo.tailadmin.com/)
 
 ## Installation
 
@@ -39,9 +36,3 @@ or
 ```
 yarn dev
 ```
-
-### 📄 License
-TailAdmin Next.js Free is 100% free and open-source; feel free to use it with your personal and commercial projects.
-
-### 💜 Support
-If you like the template, please star this repository to inspire the team to create more stuff like this and reach more users like you!

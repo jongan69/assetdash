@@ -1,9 +1,10 @@
 import ECommerce from "@/components/Dashboard/E-commerce";
+import Loader from "@/components/common/Loader";
 import { Session, createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import { Metadata } from "next";
 import { AppProps } from "next/app";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 const metadata: Metadata = {
   title: "Asset Dashboard",
@@ -15,10 +16,8 @@ export default function Home() {
   // const [supabase] = useState(() => createPagesBrowserClient())
 
   return (
-    <>
-    
-        <ECommerce />
-      
-    </>
+    <Suspense fallback={<Loader />}>
+      <ECommerce />
+    </Suspense>
   );
 }

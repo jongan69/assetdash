@@ -59,10 +59,9 @@ const ECommerce: React.FC = () => {
       // // // Example usage:
       // const trimmedArray = trimArray(combinedHistory);
       // console.log(trimmedArray);
-
+      // let cleanedForex = 0
 
       setHistory(combinedHistory)
-      // let cleanedForex = 0
       let cleanedForex = parseFloat(forex?.forexData[3]?.balances.cash).toFixed(2)
       let cleanedCrypto = parseFloat(crypto.balanceData?.tradeBalance?.eb).toFixed(2)
       let totalValue = (parseFloat(cleanedCrypto) + parseFloat(alpaca?.msg) + parseFloat(cleanedForex)).toFixed(2)
@@ -73,7 +72,7 @@ const ECommerce: React.FC = () => {
   }, []);
 
   return (
-    <Suspense fallback={<Loader />}>
+    <>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
         <CardDataStats title="Total Value" total={`$` + `${total ?? 0}`} rate="0.00%" levelUp>
           <svg
@@ -163,17 +162,23 @@ const ECommerce: React.FC = () => {
 
       <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
         {/* <ChartOne /> */}
-        <AssetChart combinedHistory={history} />
-        <ProfitChart tradeData={history} />
+        <Suspense fallback={<Loader />}>
+          <AssetChart combinedHistory={history} />
+        </Suspense>
+        <Suspense fallback={<Loader />}>
+          <ProfitChart tradeData={history} />
+        </Suspense>
         {/* <ChartTwo /> */}
         {/* <ChartThree />
         <MapOne /> */}
         <div className="col-span-12 xl:col-span-8">
-          <TradesTable combinedHistory={history} porfolioValue={total} />
+          <Suspense fallback={<Loader />}>
+            <TradesTable combinedHistory={history} porfolioValue={total} />
+          </Suspense>
         </div>
         <BotCard />
       </div>
-    </Suspense>
+    </>
   );
 };
 
