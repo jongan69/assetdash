@@ -25,7 +25,7 @@ export async function GET(req: any, res: any) {
         return NextResponse.json({ balanceData: { balance, tradeBalance, tradesHistory, ledgersHistory } })
     } catch (error) {
         // Handle any errors that occur during the API request
-        console.error('Error fetching account balance:', error);
+        console.error('Error fetching kraken account balance:', error);
         res.status(500).json({ error: 'Failed to fetch account balance' });
     }
 }

@@ -16,8 +16,8 @@ export default function Home() {
   // const [supabase] = useState(() => createPagesBrowserClient())
 
   return (
-    <Suspense fallback={<Loader />}>
+    <>
       <ECommerce />
-    </Suspense>
+    </>
   );
 }
