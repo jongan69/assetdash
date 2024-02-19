@@ -16,8 +16,6 @@ export default function Home() {
   // const [supabase] = useState(() => createPagesBrowserClient())
 
   return (
-    <>
-      <ECommerce />
-    </>
+    <ECommerce />
   );
 }
