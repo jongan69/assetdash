@@ -1,0 +1,14 @@
+version: '1'
+services:
+  nextjs:
+    image: node:18.19.0 # Choose an appropriate Node.js version
+    container_name: assetdash_nextjs
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    command: yarn install --network-timeout 1000000000 && yarn build && yarn start
+
