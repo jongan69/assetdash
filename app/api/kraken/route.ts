@@ -1,6 +1,7 @@
 
 import { NextResponse } from "next/server";
 import { Kraken } from "node-kraken-api";
+export const dynamic = 'force-dynamic'
 
 export async function GET(req: any, res: any) {
     // Initialize KrakenClient with your API keys
@@ -11,7 +12,8 @@ export async function GET(req: any, res: any) {
         /** REST API key. */
         key: key,
         /** REST API secret. */
-        secret: secret
+        secret: secret,
+        gennonce: () => (Date.now() * 1000)
     });
 
     try {
@@ -26,6 +28,7 @@ export async function GET(req: any, res: any) {
     } catch (error) {
         // Handle any errors that occur during the API request
         console.error('Error fetching kraken account balance:', error);
-        res.status(500).json({ error: 'Failed to fetch account balance' });
+        // res.status(500).json({ error: 'Failed to fetch account balance' });
+        return NextResponse.json({ error: 'Failed to fetch account balance' })
     }
 }

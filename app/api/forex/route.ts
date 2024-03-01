@@ -1,6 +1,7 @@
 
 import GCapiClient from '../../clients/gcapClient'; // Adjust the import path as per your project structure
 import { NextResponse } from 'next/server';
+export const dynamic = 'force-dynamic'
 
 export async function GET(request: Request) {
     try {

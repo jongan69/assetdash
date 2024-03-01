@@ -4,6 +4,7 @@ import { Session, createPagesBrowserClient } from "@supabase/auth-helpers-nextjs
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import { Metadata } from "next";
 import { AppProps } from "next/app";
+import { cookies } from "next/headers";
 import { Suspense, useState } from "react";
 
 const metadata: Metadata = {
@@ -13,6 +14,7 @@ const metadata: Metadata = {
 };
 
 export default function Home() {
+  const _ = cookies()
   // const [supabase] = useState(() => createPagesBrowserClient())
 
   return (

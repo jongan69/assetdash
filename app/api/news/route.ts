@@ -2,6 +2,7 @@
 import GCapiClient from '@/app/clients/gcapClient';
 // import { AlpacaClient } from '@master-chief/alpaca';
 import { NextResponse } from 'next/server';
+export const dynamic = 'force-dynamic'
 
 // API endpoint handler
 export async function GET(request: Request) {

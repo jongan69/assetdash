@@ -12,7 +12,7 @@ import ProfitChart from "../Charts/ProfitChart";
 import Loader from "../common/Loader";
 
 const ECommerce: React.FC = () => {
-
+ 
   const [total, setTotal] = useState(null);
   const [history, setHistory] = useState(null);
   const [data, setData] = useState(null);
@@ -25,14 +25,14 @@ const ECommerce: React.FC = () => {
       const forex = await fetch('api/forex').then((res) => res.json())
       const crypto = await fetch('api/kraken').then((res) => res.json())
 
-      const krakenHistory = crypto.balanceData.tradesHistory.trades
-      const alpacaHistory = alpaca.tradesWithAssets
+      const krakenHistory = crypto?.balanceData.tradesHistory.trades
+      const alpacaHistory = alpaca?.tradesWithAssets
 
       // Initialize an empty array for combined history
       const combinedHistory = [];
 
       // Loop through Kraken history and add each trade with asset information to combined history
-      Object.keys(krakenHistory).forEach(key => {
+      Object.keys(krakenHistory)?.forEach(key => {
         const tradeData = krakenHistory[key];
         const assetData = {
           pair: tradeData.pair,
